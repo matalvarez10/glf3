@@ -205,8 +205,157 @@ $(document).ready(function () {
 
     });
 
-
-    
-
-
+    $("#btnER").click(function () {
+        let usrinput = fetchUserInput3();
+        let i, j, k, name, con, start, bool;
+        for(i = 0; i < usrinput.states3.length; i++){
+            name = usrinput.states3[i];
+            con = "";
+            if(usrinput.initialState3 != name && !usrinput.finalStates3.includes(name)){
+                for(j = 0; j < usrinput.transitions3.length; j++){
+                    if(usrinput.transitions3[j].nextStates == name && usrinput.transitions3[j].state != name){
+                        con += usrinput.transitions3[j].symbol;
+                        start = usrinput.transitions3[j].state;
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates == name && usrinput.transitions3[k].state == name){
+                                con += usrinput.transitions3[j].symbol;
+                                con += "*";
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                            }
+                        }
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates != name && usrinput.transitions3[k].state == name){
+                                usrinput.transitions3.push(new Transition(start, usrinput.transitions3[k].nextStates, "(" + con + usrinput.transitions3[j].symbol + ")"));
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                            }
+                        }
+                        usrinput.transitions3.splice(j, 1);
+                        j--;
+                    }
+                }
+                usrinput.states3.splice(i, 1);
+                i--;
+            }
+        }
+        for(i = 0; i < usrinput.states3.length; i++){
+            con = "";
+            name = usrinput.states3[i];
+            if(usrinput.initialState3 != name && usrinput.states3.length > 2){
+                for(j = 0; j < usrinput.transitions3.length; j++){
+                    if(usrinput.transitions3[j].nextStates == name && usrinput.transitions3[j].state != name && usrinput.transitions3[j].state != usrinput.initialState3){
+                        con += usrinput.transitions3[j].symbol;
+                        start = usrinput.transitions3[j].state;
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates == name && usrinput.transitions3[k].state == name){
+                                con += usrinput.transitions3[j].symbol;
+                                con += "*";
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                            }
+                        }
+                        bool = false;
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates != name && usrinput.transitions3[k].state == name){
+                                usrinput.transitions3.push(new Transition(start, usrinput.transitions3[k].nextStates, "(" + con + usrinput.transitions3[k].symbol + ")"));
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                                bool = true;
+                            }
+                        }
+                        if(bool){
+                            usrinput.transitions3.push(new Transition(start, start, "(" + con + ")"));
+                        }
+                        usrinput.transitions3.splice(j, 1);
+                        j--;
+                    }
+                }
+                usrinput.states3.splice(i, 1);
+                i--;
+            }
+        }
+        for(i = 0; i < usrinput.transitions3.length; i++){
+            if(usrinput.transitions3[i].nextStates == usrinput.initialState3){
+                start = usrinput.transitions3[i].state;
+                for(j = 0; j < usrinput.transitions3.length; j++){
+                    if(usrinput.transitions3[j].nextStates == usrinput.initialState3 && usrinput.transitions3[j].state == usrinput.initialState3){
+                        con += usrinput.transitions3[j].symbol;
+                        con += "*";
+                        usrinput.transitions3.splice(j, 1);
+                        j--;
+                        if(i>j)
+                            i--;
+                    }
+                }
+                bool = false;
+                for(j = 0; j < usrinput.transitions3.length; j++){
+                    if(usrinput.transitions3[j].nextStates != usrinput.initialState3 && usrinput.transitions3[j].state == usrinput.initialState3){
+                        usrinput.transitions3.push(new Transition(start, usrinput.transitions3[j].nextStates, "(" + con + usrinput.transitions3[j].symbol + ")"));
+                        usrinput.transitions3.splice(j, 1);
+                        j--;
+                        if(i>j)
+                            i--;
+                    }
+                }
+                usrinput.transitions3.splice(i, 1);
+                i--;
+            }
+        }
+        for(i = 0; i < usrinput.states3.length; i++){
+            con = "";
+            name = usrinput.states3[i];
+            if(usrinput.initialState3 != name){
+                for(j = 0; j < usrinput.transitions3.length; j++){
+                    if(usrinput.transitions3[j].nextStates == name && usrinput.transitions3[j].state != name){
+                        con += usrinput.transitions3[j].symbol;
+                        start = usrinput.transitions3[j].state;
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates == name && usrinput.transitions3[k].state == name){
+                                con += usrinput.transitions3[j].symbol;
+                                con += "*";
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                            }
+                        }
+                        bool = false;
+                        for(k = 0; k < usrinput.transitions3.length; k++){
+                            if(usrinput.transitions3[k].nextStates != name && usrinput.transitions3[k].state == name){
+                                usrinput.transitions3.push(new Transition(start, usrinput.transitions3[k].nextStates, "(" + con + usrinput.transitions3[k].symbol + ")"));
+                                usrinput.transitions3.splice(k, 1);
+                                k--;
+                                if(j>k)
+                                    j--;
+                                bool = true;
+                            }
+                        }
+                        if(bool){
+                            usrinput.transitions3.push(new Transition(start, start, "(" + con + ")"));
+                        }
+                        usrinput.transitions3.splice(j, 1);
+                        j--;
+                    }
+                }
+                usrinput.states3.splice(i, 1);
+                i--;
+            }
+        }
+        con = "";
+        for(i = 0; i < usrinput.transitions3.length; i++){
+            if(con != "")
+                con += "+";
+            con += usrinput.transitions3[i].symbol;
+        }
+        $("#ER").html(con);
+    });
 });
